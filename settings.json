@@ -1,0 +1,278 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+
+  //  editor settings
+  "ui_font_size": 13,
+  "ui_font_family": "MonoLisa",
+  // Move all panel to the right
+  "project_panel": {
+    "button": true,
+    "dock": "right",
+    "git_status": true
+  },
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  // Move some unnecessary panels to the left
+  "notification_panel": {
+    "dock": "left"
+  },
+
+  // Agent, assistant, mcp
+  "agent": {
+    "default_profile": "write",
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "claude-sonnet-4.5"
+    },
+    "inline_assistant_model": {
+      "provider": "copilot_chat",
+      "model": "claude-sonnet-4-5"
+    },
+    "inline_alternatives": [
+      {
+        "provider": "copilot_chat",
+        "model": "gpt-5-codex"
+      }
+    ],
+    "commit_message_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-5-mini"
+    },
+    "dock": "left",
+    "play_sound_when_agent_done": true,
+    "use_modifier_to_send": true,
+    "enable_feedback": false
+  },
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
+  // mcp
+  "context_servers": {
+    "mcp-server-github": {
+      "source": "extension",
+      "settings": {
+        "github_personal_access_token": "<GITHUB_PERSONAL_ACCESS_TOKEN>"
+      }
+    },
+    "mcp-server-markitdown": {
+      "source": "extension",
+      "settings": {
+        "package_version": "latest"
+      }
+    },
+    "postgres-context-server": {
+      "source": "extension",
+      "settings": {
+        "package_version": "latest"
+      }
+    },
+    "context7": {
+      "source": "custom",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp",
+        "--api-key",
+        "<CONTEXT_7_API_TOKEN>"
+      ]
+    },
+    "playwright": {
+      "source": "custom",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "sentry": {
+      "source": "custom",
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.sentry.dev/mcp"]
+    },
+    "laravel-boost": {
+      "source": "custom",
+      "command": "php",
+      "args": ["artisan", "boost:mcp"]
+    }
+  },
+  // editor canvas
+  "buffer_font_size": 11,
+  "buffer_font_family": "MonoLisa",
+  "buffer_line_height": "comfortable",
+  "base_keymap": "SublimeText",
+  "relative_line_numbers": true,
+  "format_on_save": "on",
+  // "vim_mode": true,
+
+  // theme settings
+  "theme": {
+    "mode": "system",
+    "light": "Zedokai Light",
+    "dark": "Zedokai Classic"
+  },
+  // icon, inherited basically from theme
+  "icon_theme": "Zed (Default)",
+
+  // terminal
+  "terminal": {
+    "detect_venv": {
+      "on": {
+        "directories": [".env", "env", ".venv", "venv"],
+        "activate_script": "default"
+      }
+    },
+    "font_family": "Hack Nerd Font Mono"
+  },
+
+  // Finder model width
+  "file_finder": {
+    "modal_max_width": "medium"
+  },
+
+  // Indentation, rainbow indentation
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware"
+  },
+
+  // Inlay hints preconfigured by Zed: Go, Rust, Typescript and Svelte
+  "inlay_hints": {
+    "enabled": true
+  },
+
+  // LSP Settings
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "classAttributes": ["class", "className", "ngClass", "styles"]
+      }
+    },
+    "intelephense": {
+      "initialization_options": {
+        "licenceKey": "~/intelephense/licence.txt"
+      }
+    },
+    "golangci-lint": {
+      "initialization_options": {
+        "command": [
+          "golangci-lint",
+          "run",
+          "--output.json.path",
+          "stdout",
+          "--show-stats=false",
+          "--output.text.path="
+        ]
+      }
+    },
+    "basedpyright": {
+      "settings": {
+        "python.analysis": {
+          "diagnosticMode": "workspace"
+        },
+        "python": {
+          "pythonPath": ".venv/bin/python"
+        }
+      }
+    }
+  },
+
+  // language settings
+  "languages": {
+    "PHP": {
+      "language_servers": ["intelephense", "!phpactor", "..."],
+      "formatter": {
+        "external": {
+          "command": "bash",
+          "arguments": [
+            "-c",
+            "cat > {buffer_path} && ./vendor/bin/pint --quiet {buffer_path} && cat {buffer_path}"
+          ]
+        }
+      }
+    },
+    // Refer https://zed.dev/docs/languages/javascript and https://zed.dev/docs/languages/typescript for more info
+    "TypeScript": {
+      // Refer https://github.com/jellydn/ts-inlay-hints for how to setup for Neovim and VSCode
+      "inlay_hints": {
+        "enabled": true,
+        "show_parameter_hints": false,
+        "show_other_hints": true,
+        "show_type_hints": true
+      }
+    },
+    "Python": {
+      "format_on_save": "on",
+      "formatter": [
+        {
+          "external": {
+            "command": "ruff",
+            "arguments": ["format", "-"]
+          }
+        },
+        {
+          "code_actions": {
+            // Fix all auto-fixable lint violations
+            "source.fixAll.ruff": true,
+            // Organize imports
+            "source.organizeImports.ruff": true
+          }
+        }
+      ],
+      "language_servers": ["basedpyright", "ruff", "!pyright"]
+    },
+    "Go": {
+      "language_servers": ["gopls", "golangci-lint"]
+    }
+  },
+
+  "auto_install_extensions": {
+    "php": true,
+    "ruff": true,
+    "golangci-lint": true,
+    "zedokai": true,
+    "mcp-server-github": true,
+    "mcp-server-markitdown": true,
+    "postgres-context-server": true
+  },
+
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+    // above is default from Zed
+    "**/out",
+    "**/dist",
+    "**/.husky",
+    "**/.turbo",
+    "**/.vscode-test",
+    "**/.vscode",
+    "**/.next",
+    "**/.storybook",
+    "**/.tap",
+    "**/.nyc_output",
+    "**/report",
+    "**/node_modules",
+    // for ai editor or agents
+    "**/.opencode",
+    "**/.claude",
+    "**/.trae",
+    "**/.cursor"
+  ]
+}
