@@ -2,10 +2,6 @@
 //
 // For information on how to configure Zed, see the Zed
 // documentation: https://zed.dev/docs/configuring-zed
-//
-// To see all of Zed's default settings without changing your
-// custom settings, run `zed: open default settings` from the
-// command palette (cmd-shift-p / ctrl-shift-p)
 {
   "telemetry": {
     "diagnostics": false,
@@ -34,19 +30,19 @@
 
   // Agent, assistant, mcp
   "agent": {
-    "default_profile": "write",
+    "default_profile": "ask",
     "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5"
+      "model": "grok-code-fast-1"
     },
     "inline_assistant_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4-5"
+      "model": "grok-code-fast-1"
     },
     "inline_alternatives": [
       {
         "provider": "copilot_chat",
-        "model": "gpt-5-codex"
+        "model": "gpt-5-mini"
       }
     ],
     "commit_message_model": {
@@ -78,7 +74,7 @@
     "postgres-context-server": {
       "source": "extension",
       "settings": {
-        "package_version": "latest"
+        "database_url": "postgresql://myuser:mypassword@localhost:5432/mydatabase"
       }
     },
     "context7": {
@@ -118,9 +114,9 @@
 
   // theme settings
   "theme": {
-    "mode": "system",
+    "mode": "dark",
     "light": "Zedokai Light",
-    "dark": "Zedokai Classic"
+    "dark": "Zedokai Darker (Filter Octagon)"
   },
   // icon, inherited basically from theme
   "icon_theme": "Zed (Default)",
@@ -149,19 +145,42 @@
 
   // Inlay hints preconfigured by Zed: Go, Rust, Typescript and Svelte
   "inlay_hints": {
-    "enabled": true
+    "enabled": true,
+    "show_type_hints": true,
+    "show_parameter_hints": true,
+    "show_other_hints": true
   },
 
   // LSP Settings
   "lsp": {
     "tailwindcss-language-server": {
       "settings": {
-        "classAttributes": ["class", "className", "ngClass", "styles"]
+        "class_attributes": ["class", "className", "ngClass", "styles"]
       }
     },
     "intelephense": {
       "initialization_options": {
-        "licenceKey": "~/intelephense/licence.txt"
+        "enable": true,
+        "license_key": "~/intelephense/licence.txt"
+      }
+    },
+    "phptools": {
+      "initialization_options": {
+        "php.stubs": [
+          "*",
+          "zip",
+          "zlib",
+          "pcntl",
+          "com",
+          "composer",
+          "wordpress"
+        ]
+        // "php.workspace.includePath": "file:///Users/me/projects/php_stubs"
+      },
+      "settings": {
+        "completion.enable": false,
+        "codeLens.enable": false,
+        "enabled": false
       }
     },
     "golangci-lint": {
@@ -179,19 +198,18 @@
     "basedpyright": {
       "settings": {
         "python.analysis": {
-          "diagnosticMode": "workspace"
+          "diagnostic_mode": "workspace"
         },
         "python": {
-          "pythonPath": ".venv/bin/python"
+          "python_path": ".venv/bin/python"
         }
       }
     }
   },
-
   // language settings
   "languages": {
     "PHP": {
-      "language_servers": ["intelephense", "!phpactor", "..."],
+      "language_servers": ["!intelephense", "phptools", "!phpactor", "..."],
       "formatter": {
         "external": {
           "command": "bash",
