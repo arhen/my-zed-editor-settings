@@ -3,6 +3,13 @@
 // For information on how to configure Zed, see the Zed
 // documentation: https://zed.dev/docs/configuring-zed
 {
+  "ssh_connections": [
+    {
+      "host": "github.com",
+      "args": [],
+      "projects": []
+    }
+  ],
   "telemetry": {
     "diagnostics": false,
     "metrics": false
@@ -30,14 +37,43 @@
 
   // Agent, assistant, mcp
   "agent": {
-    "default_profile": "ask",
+    "profiles": {
+      "ask": {
+        "name": "Ask",
+        "tools": {
+          "contents": true,
+          "diagnostics": true,
+          "fetch": true,
+          "list_directory": true,
+          "project_notifications": false,
+          "now": true,
+          "find_path": true,
+          "read_file": true,
+          "open": true,
+          "grep": true,
+          "thinking": true,
+          "web_search": true
+        },
+        "enable_all_context_servers": false,
+        "context_servers": {
+          "mcp-server-context7": {
+            "tools": {
+              "resolve-library-id": false,
+              "get-library-docs": false
+            }
+          }
+        }
+      }
+    },
+    "always_allow_tool_actions": true,
+    "default_profile": "write",
     "default_model": {
       "provider": "copilot_chat",
-      "model": "grok-code-fast-1"
+      "model": "claude-haiku-4.5"
     },
     "inline_assistant_model": {
       "provider": "copilot_chat",
-      "model": "grok-code-fast-1"
+      "model": "claude-haiku-4.5"
     },
     "inline_alternatives": [
       {
@@ -59,10 +95,35 @@
   },
   // mcp
   "context_servers": {
+    "opencode": {
+      "source": "custom",
+      "enabled": true,
+      "command": "opencode",
+      "args": ["acp"]
+    },
+    "open-code": {
+      "source": "custom",
+      "enabled": true,
+      "command": "opencode",
+      "args": ["acp"]
+    },
+    "OpenCode": {
+      "source": "custom",
+      "enabled": true,
+      "command": "opencode",
+      "args": ["acp"]
+    },
+    "mcp-server-context7": {
+      "source": "extension",
+      "enabled": true,
+      "settings": {
+        "context7_api_key": "{{CONTEXT7_API_KEY}}"
+      }
+    },
     "mcp-server-github": {
       "source": "extension",
       "settings": {
-        "github_personal_access_token": "<GITHUB_PERSONAL_ACCESS_TOKEN>"
+        "github_personal_access_token": "{{GITHUB_PERSONAL_ACCESS_TOKEN}}"
       }
     },
     "mcp-server-markitdown": {
@@ -74,18 +135,8 @@
     "postgres-context-server": {
       "source": "extension",
       "settings": {
-        "database_url": "postgresql://myuser:mypassword@localhost:5432/mydatabase"
+        "database_url": "{{DATABASE_URL}}"
       }
-    },
-    "context7": {
-      "source": "custom",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp",
-        "--api-key",
-        "<CONTEXT_7_API_TOKEN>"
-      ]
     },
     "playwright": {
       "source": "custom",
@@ -93,6 +144,7 @@
       "args": ["-y", "@playwright/mcp@latest"]
     },
     "sentry": {
+      "env": {},
       "source": "custom",
       "command": "npx",
       "args": ["-y", "mcp-remote@latest", "https://mcp.sentry.dev/mcp"]
@@ -103,12 +155,19 @@
       "args": ["artisan", "boost:mcp"]
     }
   },
+  // agent server
+  "agent_servers": {
+    "OpenCode": {
+      "command": "opencode",
+      "args": ["acp"]
+    }
+  },
   // editor canvas
   "buffer_font_size": 11,
   "buffer_font_family": "MonoLisa",
   "buffer_line_height": "comfortable",
   "base_keymap": "SublimeText",
-  "relative_line_numbers": true,
+  // "relative_line_numbers": true,
   "format_on_save": "on",
   // "vim_mode": true,
 
@@ -116,7 +175,7 @@
   "theme": {
     "mode": "dark",
     "light": "Zedokai Light",
-    "dark": "Zedokai Darker (Filter Octagon)"
+    "dark": "Zedokai Darker (Filter Spectrum)"
   },
   // icon, inherited basically from theme
   "icon_theme": "Zed (Default)",
@@ -129,7 +188,7 @@
         "activate_script": "default"
       }
     },
-    "font_family": "Hack Nerd Font Mono"
+    "font_family": "Fira Mono for Powerline"
   },
 
   // Finder model width
@@ -175,12 +234,16 @@
           "composer",
           "wordpress"
         ]
-        // "php.workspace.includePath": "file:///Users/me/projects/php_stubs"
       },
       "settings": {
-        "completion.enable": false,
-        "codeLens.enable": false,
-        "enabled": false
+        "completion.enable": true,
+        "codeLens.enable": true,
+        "enabled": true
+      }
+    },
+    "phpactor": {
+      "settings": {
+        "language_server_worse_reflection.inlay_hints.enable": true
       }
     },
     "golangci-lint": {
@@ -209,7 +272,7 @@
   // language settings
   "languages": {
     "PHP": {
-      "language_servers": ["!intelephense", "phptools", "!phpactor", "..."],
+      "language_servers": ["!intelephense", "phptools", "!phpactor"],
       "formatter": {
         "external": {
           "command": "bash",
@@ -220,34 +283,23 @@
         }
       }
     },
-    // Refer https://zed.dev/docs/languages/javascript and https://zed.dev/docs/languages/typescript for more info
     "TypeScript": {
-      // Refer https://github.com/jellydn/ts-inlay-hints for how to setup for Neovim and VSCode
       "inlay_hints": {
         "enabled": true,
         "show_parameter_hints": false,
         "show_other_hints": true,
         "show_type_hints": true
-      }
+      },
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      },
+      "format_on_save": "on"
     },
     "Python": {
       "format_on_save": "on",
-      "formatter": [
-        {
-          "external": {
-            "command": "ruff",
-            "arguments": ["format", "-"]
-          }
-        },
-        {
-          "code_actions": {
-            // Fix all auto-fixable lint violations
-            "source.fixAll.ruff": true,
-            // Organize imports
-            "source.organizeImports.ruff": true
-          }
-        }
-      ],
       "language_servers": ["basedpyright", "ruff", "!pyright"]
     },
     "Go": {
@@ -257,7 +309,6 @@
 
   "auto_install_extensions": {
     "php": true,
-    "ruff": true,
     "golangci-lint": true,
     "zedokai": true,
     "mcp-server-github": true,
